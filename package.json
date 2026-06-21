@@ -18,6 +18,7 @@
   "homepage": "https://github.com/chaitanyakumarsp/playwright-evaluation#readme",
   "devDependencies": {
     "@playwright/test": "^1.61.0",
-    "@types/node": "^26.0.0"
+    "@types/node": "^26.0.0",
+    "dotenv": "^17.4.2"
   }
 }
