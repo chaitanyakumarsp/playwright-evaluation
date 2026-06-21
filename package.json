@@ -1,0 +1,23 @@
+{
+  "name": "playwright-evaluation",
+  "version": "1.0.0",
+  "description": "Test Automation Playwright with type script project",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chaitanyakumarsp/playwright-evaluation.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/chaitanyakumarsp/playwright-evaluation/issues"
+  },
+  "homepage": "https://github.com/chaitanyakumarsp/playwright-evaluation#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.61.0",
+    "@types/node": "^26.0.0"
+  }
+}
