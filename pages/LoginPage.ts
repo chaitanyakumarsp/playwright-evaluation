@@ -26,53 +26,45 @@ export class LoginPage {
   }
 
 
-public async login(username: string, password: string, testName?: string): Promise<void> {
+public async login(
+  username: string,
+  password: string,
+  testName?: string
+): Promise<void> {
   const info = testName ? `Test: ${testName} -` : 'Info:';
 
-  await this.page.waitForLoadState('domcontentloaded');
-
-  await this.usernameInput.waitFor({ state: 'visible' });
-
-  await this.usernameInput.clear();
-  await this.usernameInput.pressSequentially(username);
-
-  await this.passwordInput.clear();
-  await this.passwordInput.pressSequentially(password);
-
-  await this.loginButton.click();
-  await this.page.waitForLoadState('domcontentloaded');
-
-  // Wait until either dashboard loads or an error is displayed
-  await Promise.race([
-    this.page.waitForURL(/dashboard/, { timeout: 10000 }),
-    this.dashboardMenu.waitFor({ state: 'visible', timeout: 10000 }),
-    this.errorMessage.waitFor({ state: 'visible', timeout: 10000 })
-  ]);
-
   console.log(`${info} Preparing to login`);
+  console.log(`${info} Using credentials username='${username}', password='${password}'`);
+
+
+  // Ensure page is ready
+  await this.page.waitForLoadState('domcontentloaded');
+
+  // Enter credentials
   console.log(`${info} Entering username`);
-  await this.usernameInput.waitFor({ state: 'visible' });
-  await this.usernameInput.clear();
   await this.usernameInput.pressSequentially(username);
-  console.log(`${info} Username entered`);
 
   console.log(`${info} Entering password`);
-  await this.passwordInput.clear();
   await this.passwordInput.pressSequentially(password);
-  console.log(`${info} Password entered`);
 
+  // Click login
   console.log(`${info} Clicking login button`);
   await this.loginButton.click();
-  await this.page.waitForLoadState('domcontentloaded');
 
-  // Wait until either dashboard loads or an error is displayed
-  await Promise.race([
-    this.page.waitForURL(/dashboard/, { timeout: 10000 }),
-    this.dashboardMenu.waitFor({ state: 'visible', timeout: 10000 }),
-    this.errorMessage.waitFor({ state: 'visible', timeout: 10000 })
+  // Wait for either success or error
+  const result = await Promise.race([
+    this.page.waitForURL(/dashboard/, { timeout: 10000 }).then(() => 'success'),
+    this.dashboardMenu.waitFor({ state: 'visible', timeout: 10000 }).then(() => 'success'),
+    this.errorMessage.waitFor({ state: 'visible', timeout: 10000 }).then(() => 'error')
   ]);
 
-  console.log(`${info} login completed`);
+  // Handle failure explicitly
+  if (result === 'error') {
+    const errorText = await this.errorMessage.textContent();
+    throw new Error(`${info} Login failed: ${errorText ?? 'Unknown error'}`);
+  }
+
+  console.log(`${info} Login completed successfully`);
 }
 
   public async getErrorMessage(): Promise<string> {

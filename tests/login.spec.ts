@@ -6,18 +6,16 @@ import { test, expect } from '../fixtures/basetest';
 
 
 test.describe('Login Tests', () => {
-  test.beforeEach(async ({}, testInfo) => {
-    console.log(`Starting test: ${testInfo.title}`);
-  });
 
-test('@smoke @login successful login', async ({ loginPage, page }, testInfo) => {
 
-  await loginPage.goto(testInfo.title);
+test('@smoke @login successful login', async ({ loginPage, page }) => {
+
+  await loginPage.goto();
 
 const username: string = process.env.Web_USERNAME ?? '';
 const password: string = process.env.Web_PASSWORD ?? '';
 
-  await loginPage.loginWithRetry(username, password, 1, testInfo.title);
+  await loginPage.loginWithRetry(username, password);
 
 
   const currentUrl: string = page.url();
@@ -32,23 +30,23 @@ const password: string = process.env.Web_PASSWORD ?? '';
   await expect(page).toHaveURL(/dashboard/);
 });
 
-  test('@smoke @login failed login', async ({ loginPage }, testInfo) => {
-    await loginPage.goto(testInfo.title);
+  test('@smoke @login failed login', async ({ loginPage }) => {
+    await loginPage.goto();
 
-    await loginPage.login('Admin', 'wrongpass', testInfo.title);
+    await loginPage.login('Admin', 'wrongpass');
 
     const error: string = await loginPage.getErrorMessage();
     expect(error).toContain('Invalid');
   });
 
-test('@regression @login successful login', async ({ loginPage, page }, testInfo) => {
+test('@regression @login successful login', async ({ loginPage, page }) => {
 
-  await loginPage.goto(testInfo.title);
+  await loginPage.goto();
 
 const username: string = process.env.Web_USERNAME ?? '';
 const password: string = process.env.Web_PASSWORD ?? '';
 
-  await loginPage.loginWithRetry(username, password, 1, testInfo.title);
+  await loginPage.loginWithRetry(username, password);
 
 
   const currentUrl: string = page.url();
@@ -62,17 +60,17 @@ const password: string = process.env.Web_PASSWORD ?? '';
 
   await expect(page).toHaveURL(/dashboard/);
 });
-  test('@regression @login failed login', async ({ loginPage }, testInfo) => {
-    await loginPage.goto(testInfo.title);
+  test('@regression @login failed login', async ({ loginPage }) => {
+    await loginPage.goto();
 
-    await loginPage.login('Admin', 'wrongpass', testInfo.title);
+    await loginPage.login('Admin', 'wrongpass');
 
     const error: string = await loginPage.getErrorMessage();
     expect(error).toContain('Invalid');
   });
 
-console.log('USERNAME:', process.env.Web_USERNAME);
-console.log('PASSWORD:', process.env.Web_PASSWORD);
+console.log('USERNAME:', process.env.USERNAME);
+console.log('PASSWORD:', process.env.PASSWORD);
 
 
 });
