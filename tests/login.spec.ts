@@ -9,7 +9,7 @@ import data from '../data.json';
 test.describe('Login Tests', () => {
 
 
-test('@smoke @login successful login', async ({ loginPage, page }) => {
+test('@smoke @login successful login using env creds', async ({ loginPage, page }) => {
 
   await loginPage.goto();
 
@@ -33,18 +33,15 @@ const password: string = process.env.Web_PASSWORD ?? '';
 
   test('@smoke @login failed login', async ({ loginPage }) => {
     await loginPage.goto();
-
-    await loginPage.login('Admin', 'wrongpass');
-
+    await loginPage.loginExpectFailure(data.Web_USERNAME, data.Web_InvalidPASSWORD, 'Failed Login Test');
     const error: string = await loginPage.getErrorMessage();
     expect(error).toContain('Invalid');
   });
 
-test('@regression @login successful login', async ({ loginPage, page }) => {
+test('@smoke @login successful login using data creds', async ({ loginPage, page }) => {
 
   await loginPage.goto();
   await loginPage.login(data.Web_USERNAME, data.Web_PASSWORD, 'Login Test');
-  await loginPage.loginWithRetry(data.Web_USERNAME, data.Web_PASSWORD);
 
   const currentUrl: string = page.url();
 
@@ -57,17 +54,7 @@ test('@regression @login successful login', async ({ loginPage, page }) => {
 
   await expect(page).toHaveURL(/dashboard/);
 });
-  test('@regression @login failed login', async ({ loginPage }) => {
-    await loginPage.goto();
 
-    await loginPage.login('Admin', 'wrongpass');
-
-    const error: string = await loginPage.getErrorMessage();
-    expect(error).toContain('Invalid');
-  });
-
-console.log('USERNAME:', data.Web_USERNAME);
-console.log('PASSWORD:', data.Web_PASSWORD);
-
+console.log('USERNAME:', data.Web_USERNAME,'PASSWORD:', data.Web_PASSWORD);
 
 });

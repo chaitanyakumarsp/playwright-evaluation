@@ -72,6 +72,33 @@ public async login(
     return await this.errorMessage.innerText();
   }
 
+  public async loginExpectFailure(username: string,password: string,testName?: string): Promise<string> {
+    const info = testName ? `Test: ${testName} -` : 'Info:';
+    console.log(`${info} Failure login check`);
+
+    await this.page.waitForLoadState('domcontentloaded');
+    await this.usernameInput.pressSequentially(username, { delay: 100 });
+    await this.passwordInput.pressSequentially(password, { delay: 100 });
+    await this.loginButton.click();
+    console.log(`${info} Waiting for login failure message`);
+    const errorText = await this.errorMessage.waitFor({ state: 'visible', timeout: 3000 })
+      .then(() => this.errorMessage.textContent())
+      .catch(() => null);
+
+    const dashboardVisible = await this.dashboardMenu.isVisible().catch(() => false);
+    if (dashboardVisible) {
+      throw new Error(`${info} Expected login failure but dashboard was displayed`);
+    }
+
+    if (!errorText) {
+      throw new Error(`${info} Login failed, but no error message was displayed`);
+    }
+
+    const trimmedError = errorText.trim();
+    console.log(`${info} Login failed as expected: ${trimmedError}`);
+    return trimmedError;
+  }
+
   public async loginWithRetry(
   username: string,
   password: string,
