@@ -3,6 +3,7 @@
 
 import process from 'process';
 import { test, expect } from '../fixtures/basetest';
+import data from '../data.json';
 
 
 test.describe('Login Tests', () => {
@@ -42,12 +43,8 @@ const password: string = process.env.Web_PASSWORD ?? '';
 test('@regression @login successful login', async ({ loginPage, page }) => {
 
   await loginPage.goto();
-
-const username: string = process.env.Web_USERNAME ?? '';
-const password: string = process.env.Web_PASSWORD ?? '';
-
-  await loginPage.loginWithRetry(username, password);
-
+  await loginPage.login(data.Web_USERNAME, data.Web_PASSWORD, 'Login Test');
+  await loginPage.loginWithRetry(data.Web_USERNAME, data.Web_PASSWORD);
 
   const currentUrl: string = page.url();
 
@@ -69,8 +66,8 @@ const password: string = process.env.Web_PASSWORD ?? '';
     expect(error).toContain('Invalid');
   });
 
-console.log('USERNAME:', process.env.USERNAME);
-console.log('PASSWORD:', process.env.PASSWORD);
+console.log('USERNAME:', data.Web_USERNAME);
+console.log('PASSWORD:', data.Web_PASSWORD);
 
 
 });

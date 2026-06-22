@@ -1,4 +1,5 @@
 import { Page, Locator } from '@playwright/test';
+import data from '../data.json';
 
 export class LoginPage {
   private readonly page: Page;
@@ -20,7 +21,7 @@ export class LoginPage {
   public async goto(testName?: string): Promise<void> {
     const info = testName ? `Test: ${testName} -` : 'Info:';
     console.log(`${info} Navigating to login page`);
-    await this.page.goto('https://opensource-demo.orangehrmlive.com');
+    await this.page.goto('data.BASE_URL');
     await this.page.waitForLoadState('domcontentloaded');
     console.log(`${info} Navigation completed`);
   }
