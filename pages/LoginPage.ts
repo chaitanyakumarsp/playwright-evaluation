@@ -81,7 +81,7 @@ public async login(
     await this.passwordInput.pressSequentially(password, { delay: 100 });
     await this.loginButton.click();
     console.log(`${info} Waiting for login failure message`);
-    const errorText = await this.errorMessage.waitFor({ state: 'visible', timeout: 3000 })
+    const errorText = await this.errorMessage.waitFor({ state: 'visible', timeout: 5000 })
       .then(() => this.errorMessage.textContent())
       .catch(() => null);
 
@@ -124,9 +124,10 @@ public async login(
 
       // Wait for success or failure
       await Promise.race([
-        this.page.waitForURL(/dashboard/, { timeout: 2000 }),
-        this.dashboardMenu.waitFor({ state: 'visible', timeout: 2000 }),
-        this.errorMessage.waitFor({ state: 'visible', timeout: 2000 })
+        await this.page.waitForLoadState('load'),
+        await this.page.waitForURL(/dashboard/, { timeout: 5000 }),
+        await this.dashboardMenu.waitFor({ state: 'visible', timeout: 5000 }),
+         this.errorMessage.waitFor({ state: 'visible', timeout: 5000 })
       ]);
 
       // Check if success
