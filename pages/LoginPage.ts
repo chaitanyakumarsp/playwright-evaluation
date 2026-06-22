@@ -21,7 +21,7 @@ export class LoginPage {
   public async goto(testName?: string): Promise<void> {
     const info = testName ? `Test: ${testName} -` : 'Info:';
     console.log(`${info} Navigating to login page`);
-    await this.page.goto('data.BASE_URL');
+    await this.page.goto(data.BASE_URL);
     await this.page.waitForLoadState('domcontentloaded');
     console.log(`${info} Navigation completed`);
   }
