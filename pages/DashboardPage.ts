@@ -1,4 +1,5 @@
-import { Page, Locator } from '@playwright/test';
+import { Page, Locator, expect } from '@playwright/test';
+
 
 export class DashboardPage {
   private readonly page: Page;
@@ -6,7 +7,7 @@ export class DashboardPage {
 
   public constructor(page: Page) {
     this.page = page;
-    this.pimMenu = page.locator('span:has-text("PIM")');
+    this.pimMenu = page.getByRole('link', { name: 'PIM' }); 
   }
 
   public async getCurrentUrl(): Promise<string> {
@@ -15,8 +16,10 @@ export class DashboardPage {
 
   
 public async navigateToPIM(): Promise<void> {
+  await this.page.waitForLoadState('domcontentloaded');
   await this.pimMenu.waitFor({ state: 'visible', timeout: 10000 });
   await this.pimMenu.click();
+  await expect(this.page).toHaveURL(/viewEmployeeList/);
 
   //Ensure page loaded
   await this.page.waitForLoadState('domcontentloaded');

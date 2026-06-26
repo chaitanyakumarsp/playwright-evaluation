@@ -7,21 +7,23 @@ export class LoginPage {
   private readonly passwordInput: Locator;
   private readonly loginButton: Locator;
   private readonly errorMessage: Locator;
-  private readonly dashboardMenu: Locator;
+   readonly dashboardMenu: Locator;
+  static dashboardMenu: Locator;
 
   public constructor(page: Page) {
     this.page = page;
     this.usernameInput = page.locator('input[name="username"]');
     this.passwordInput = page.locator('input[name="password"]');
     this.loginButton = page.locator('button[type="submit"]');
-    this.errorMessage = page.locator('.oxd-alert-content-text');
-    this.dashboardMenu = page.locator('span:has-text("PIM")');
+    this.errorMessage = page.locator('.oxd-alert-content-text');  
+    this.dashboardMenu = page.getByRole('link', { name: 'PIM' });
+
   }
 
   public async goto(testName?: string): Promise<void> {
     const info = testName ? `Test: ${testName} -` : 'Info:';
     console.log(`${info} Navigating to login page`);
-    await this.page.goto(data.BASE_URL);
+    await this.page.goto(data.BASE_URL, { timeout: 120000 });
     await this.page.waitForLoadState('domcontentloaded');
     console.log(`${info} Navigation completed`);
   }

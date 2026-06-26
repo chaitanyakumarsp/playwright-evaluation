@@ -22,8 +22,8 @@ test.describe('Employee Tests', () => {
     //await loginPage.login(username, password, testInfo.title);
     await loginPage.login(data.Web_USERNAME, data.Web_PASSWORD, testInfo.title);
     await dashboardPage.navigateToPIM();
-
-    await page.waitForSelector('h6:has-text("PIM")');
+    const dashboardMenu = page.getByRole('link', { name: 'PIM' });
+    await dashboardMenu.click();
 
     const employeeName: string = process.env.EMPLOYEE_NAME ?? 'Employee';
     console.log(`Employee test using employeeName='${employeeName}'`);
